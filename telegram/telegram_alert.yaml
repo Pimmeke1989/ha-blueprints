@@ -8,7 +8,7 @@ blueprint:
 
     # 🚨 Telegram Alert
 
-mo    This is a replacement for the alert integration which sends alerts through Telegram.
+    This is a replacement for the alert integration which sends alerts through Telegram.
 
     ## ❓How to use
 
