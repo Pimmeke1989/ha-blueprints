@@ -8,7 +8,7 @@ blueprint:
 
     # 🚨 Telegram Alert
 
-    This is a replacement for the alert integration which sends alerts through Telegram.
+mo    This is a replacement for the alert integration which sends alerts through Telegram.
 
     ## ❓How to use
 
@@ -622,7 +622,7 @@ actions:
                               target: "{{ chat_id }}"
                               title: "{{ alert_title if use_ack_title else '' }}"
                               message: "{{ acknowledge_message }}"
-                              pase_mode: !input parse_mode
+                              parse_mode: !input parse_mode
                               disable_web_page_preview: !input disable_web_page_preview
                       - alias: Remove this entry for the recipent list
                         variables:
@@ -652,7 +652,7 @@ actions:
                                     target: "{{ state_attr(repeat.item, 'chat_id')}}"
                                     title: "{{ alert_title if use_done_title else '' }}"
                                     message: "{{ done_message }}"
-                                    pase_mode: !input parse_mode
+                                    parse_mode: !input parse_mode
                                     disable_web_page_preview: !input disable_web_page_preview
                       - alias: Remove data from the sensor
                         if: "{{ alert_data_sensor is not none }}"
