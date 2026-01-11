@@ -1,7 +1,7 @@
 blueprint:
   name: Voice - Calendar entries - Full LLM script
   author: TheFes
-  source_url: https://github.com/TheFes/ha-blueprints/blob/main/calender/3_voice_calendar_entries_full_llm.yaml
+  source_url: https://github.com/Pimmeke1989/ha-blueprints/blob/main/calender/3_voice_calendar_entries_full_llm.yaml
   description:
     "![Image](https://github.com/TheFes/ha-blueprints/blob/main/images/header.png?raw=true)
 
@@ -233,11 +233,26 @@ sequence:
   - variables:
       result:
         events: >-
-          {{
-            response.values()
-              | map(attribute='events')
-              | sum(start=[])
-              | sort(attribute=start)
-          }}
+          {% set raw_events = response.values() | map(attribute='events') | sum(start=[]) | sort(attribute='start') %}
+          {% set ns = namespace(clean_events=[]) %}
+          
+          {% for event in raw_events %}
+            {# Check of het een dag-event is (datum) of tijd-event (datetime) #}
+            {% if 'T' in event.start|string %}
+              {# Het is een tijd-event: converteer naar Lokaal en maak er platte tekst van #}
+              {% set s = (event.start | as_datetime | as_local).strftime('%Y-%m-%d %H:%M') %}
+              {% set e = (event.end | as_datetime | as_local).strftime('%Y-%m-%d %H:%M') %}
+            {% else %}
+              {# Het is een hele dag event: laat de datum staan zoals hij is #}
+              {% set s = event.start %}
+              {% set e = event.end %}
+            {% endif %}
+            
+            {# Maak het event opnieuw aan met de gecorrigeerde tijden #}
+            {% set clean_event = dict(event, start=s, end=e) %}
+            {% set ns.clean_events = ns.clean_events + [clean_event] %}
+          {% endfor %}
+          
+          {{ ns.clean_events }}
   - stop: ""
     response_variable: result
